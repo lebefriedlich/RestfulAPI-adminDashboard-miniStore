@@ -39,7 +39,7 @@ class products_model
                     SET name_product = :name_product, description = :descr";
 
         if (isset($data['image']) && !empty($data['image'])) {
-            $query .= ", 'image' = :img";
+            $query .= ", `image` = :img";
         }
 
         $query .= ", price = :price, qty = :qty, category = :category, brand = :brand
@@ -71,5 +71,15 @@ class products_model
         $this->db->execute();
 
         return $this->db->rowCount();
+    }
+
+    public function findProduct($id_product)
+    {
+        $query = "SELECT `image` FROM products WHERE id_product = :id_product";
+        $this->db->query($query);
+        $this->db->bind("id_product", $id_product);
+        $this->db->execute();
+
+        return $this->db->single();
     }
 }

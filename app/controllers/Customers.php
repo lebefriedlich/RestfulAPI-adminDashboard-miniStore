@@ -61,7 +61,7 @@ class Customers extends Controller
     {
 
         if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
-            // http_response_code(405);
+            http_response_code(405);
             header('Content-Type: application/json');
             echo json_encode(['error' => 'Method Not Allowed']);
             return;
@@ -83,7 +83,7 @@ class Customers extends Controller
                 'message' => 'Admin edited user successfully'
             ]);
         } else {
-            // http_response_code(500);
+            http_response_code(500);
             header('Content-Type: application/json');
             echo json_encode([
                 'status' => 'error',

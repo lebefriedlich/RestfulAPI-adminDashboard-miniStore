@@ -62,7 +62,7 @@ class Admins extends Controller
     public function edit(string $id)
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'PUT' && $_SERVER['REQUEST_METHOD'] !== 'PATCH') {
-            // http_response_code(405);
+            http_response_code(405);
             header('Content-Type: application/json');
             echo json_encode(['error' => 'Method Not Allowed']);
             return;
@@ -84,7 +84,7 @@ class Admins extends Controller
                 'message' => 'Admin edited successfully'
             ]);
         } else {
-            // http_response_code(500);
+            http_response_code(500);
             header('Content-Type: application/json');
             echo json_encode([
                 'status' => 'error',
