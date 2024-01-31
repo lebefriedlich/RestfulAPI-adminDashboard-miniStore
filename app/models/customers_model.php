@@ -18,7 +18,7 @@ class customers_model
 
     public function checkEmailUser($email)
     {
-        $query = "SELECT email FROM users WHERE email = :email AND id_role = '2'";
+        $query = "SELECT email FROM users WHERE email = :email";
         $this->db->query($query);
         $this->db->bind('email', $email);
         return $this->db->single();

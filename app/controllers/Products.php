@@ -3,6 +3,13 @@ class Products extends Controller
 {
     public function index()
     {
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            http_response_code(405);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Method Not Allowed']);
+            return;
+        }
+        
         $data['judul'] = 'Menu Admin - Products';
         $data['products'] = $this->model('products_model')->loadProducts();
         header('Content-Type: application/json');
@@ -14,20 +21,26 @@ class Products extends Controller
 
     public function addProduct()
     {
-        $_POST['image'] = $_FILES['image']['name'];
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Method Not Allowed']);
+            return;
+        }
 
-        if ($this->model('products_model')->addProduct($_POST) > 0) {
+        $json_data = file_get_contents("php://input");
+        $data = json_decode($json_data, true);
+
+        // $data['image'] = $_FILES['image']['name'];
+
+        if ($this->model('products_model')->addProduct($data) > 0) {
             $response['status'] = 'success';
             $response['message'] = 'Admin added product successfully';
-            $response['http_code'] = 201;
         } else {
             $response['status'] = 'error';
             $response['message'] = 'Failed to added product';
-            $response['http_code'] = 500;
         }
 
-        http_response_code($response['http_code']);
-        unset($response['http_code']);
         header('Content-Type: application/json');
         echo json_encode($response);
     }
@@ -66,6 +79,14 @@ class Products extends Controller
 
     public function deleteProduct($id_product)
     {
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            http_response_code(405);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Method Not Allowed']);
+            return;
+        }
+        
         if ($this->model('products_model')->deleteProduct($id_product) > 0) {
             http_response_code(201);
             header('Content-Type: application/json');

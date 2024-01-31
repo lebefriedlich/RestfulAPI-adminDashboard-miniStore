@@ -18,24 +18,24 @@ class admins_model
 
     public function checkEmailAdmin($email)
     {
-        $query = "SELECT email FROM users WHERE email = :email AND id_role = '1'";
+        $query = "SELECT email FROM users WHERE email = :email";
         $this->db->query($query);
         $this->db->bind('email', $email);
-        return $this->db->
-        single();
+        return $this->db->single();
     }
     public function addAdmin($data)
     {
         $query = "INSERT INTO users
-                        VALUES
-                      ('', :name_user , :email, :pass, '1')";
+                    VALUES
+                    ('', :name_user, :email, :pass, '1')";
+
         $this->db->query($query);
         $this->db->bind("name_user", $data['name_user']);
         $this->db->bind("email", $data['email']);
-        $data['pass'] = password_hash($data['pass'], PASSWORD_DEFAULT);
-        $this->db->bind("pass", $data['pass']);
+        $this->db->bind("pass", password_hash($data['pass'], PASSWORD_DEFAULT));
+
         $this->db->execute();
-        return $this->db->Rowcount();
+        return $this->db->RowCount();
     }
 
     public function edit($data)
