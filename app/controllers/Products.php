@@ -108,12 +108,4 @@ class Products extends Controller
             ]);
         }
     }
-
-    public function logout()
-    {
-        session_destroy();
-        header('Content-Type: application/json');
-        echo json_encode(['status' => 'logout']);
-        exit();
-    }
 }

@@ -3,26 +3,47 @@ class Login extends Controller
 {
     public function index()
     {
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            http_response_code(405);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Method Not Allowed']);
+            return;
+        }
+
         $data['judul'] = 'Login Admin';
-        $this->view('templates/header', $data);
-        $this->view('login/index');
-        $this->view('templates/footer');
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'success',
+            'data' => $data
+        ]);
     }
 
-    public function login()
+    public function aunthenticate()
     {
-        if (isset($_POST['login'])) {
-            $loginResult = $this->model('login_model')->login($_POST);
-
-            if ($loginResult > 0) {
-                $_SESSION['login'] = true;
-                $_SESSION['user'] = $loginResult;
-                header('Location: ' . BASEURL);
-            } else {
-                Flasher::setFlash('Your username or password is incorrect. ', 'please try again', 'danger');
-                header('Location: ' . BASEURL . 'home');
-                exit;
-            }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Method Not Allowed']);
+            return;
         }
+
+        $json_data = file_get_contents("php://input");
+        $data = json_decode($json_data, true);
+        
+        $loginResult = $this->model('login_model')->login($data);
+
+        if ($loginResult) {
+            http_response_code(201);
+            $response['status'] = 'success';
+            $response['message'] = 'Success to login';
+            $response['data'] = $loginResult;
+        } else {
+            http_response_code(500);
+            $response['status'] = 'error';
+            $response['message'] = 'email or password wrong';
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
     }
 }

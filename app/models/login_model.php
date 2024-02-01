@@ -18,7 +18,7 @@ class login_model
 
         if ($result) {
             $hashedPassword = $result['pass'];
-            $enteredPassword = $data['password'];
+            $enteredPassword = $data['pass'];
 
             if (password_verify($enteredPassword, $hashedPassword)) {
                 return $result;
